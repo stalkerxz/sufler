@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101112">
+  <meta name="description" content="Браузерный телесуфлёр. Читайте в своём темпе: текст движется вслед за голосом.">
+  <title>Суфлёр — текст в ритме голоса</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='12' fill='%2318191b'/%3E%3Cpath d='M12 15h24M12 24h18M12 33h24' stroke='%23f4ab85' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <button class="icon-button menu-button" id="toggle-sidebar" aria-label="Скрыть настройки" aria-expanded="true" aria-controls="sidebar"><svg viewBox="0 0 24 24"><path d="M3 5h18M3 12h18M3 19h18"/></svg></button>
+    <span class="brand">Суфлёр</span><span class="tagline">Ваш голос задаёт темп</span>
+    <div class="header-actions">
+      <button class="quiet-button" id="help-button" aria-label="Как пользоваться"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 .5c0 1.5-2.5 2-2.5 3.5m0 3h.01"/></svg><span>Как пользоваться</span></button>
+      <button class="outline-button" id="fullscreen-button" aria-label="На весь экран"><svg viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg><span>На весь экран</span></button>
+    </div>
+  </header>
+
+  <div class="workspace">
+    <button id="drawer-backdrop" class="drawer-backdrop" aria-label="Закрыть настройки" hidden></button>
+    <aside class="sidebar" id="sidebar" aria-label="Настройки телесуфлёра">
+      <div class="sidebar-heading"><div><h1>Сценарий</h1><p id="save-status">Сохраняется в этом браузере</p></div><button id="close-sidebar" class="icon-button mobile-only" aria-label="Закрыть настройки">×</button></div>
+      <div class="tabs" role="tablist" aria-label="Настройки сценария"><button id="text-tab" role="tab" aria-selected="true" aria-controls="text-panel" class="selected">Текст</button><button id="view-tab" role="tab" aria-selected="false" aria-controls="view-panel" tabindex="-1">Вид</button></div>
+      <section id="text-panel" role="tabpanel" aria-labelledby="text-tab">
+        <label class="sr-only" for="script-editor">Текст сценария</label>
+        <textarea id="script-editor" spellcheck="false" placeholder="Вставьте текст, который хотите прочитать…" maxlength="100000"></textarea>
+        <div class="editor-footer"><span id="word-count">0 слов</span><div class="file-actions"><button class="icon-button" id="export-button" aria-label="Скачать текст" title="Скачать текст"><svg viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 16v5h16v-5"/></svg></button><button class="outline-button" id="import-button"><svg viewBox="0 0 24 24"><path d="M14 3H5v18h14V8zm0 0v5h5"/></svg>Загрузить .txt</button></div></div>
+        <input type="file" id="file-input" accept=".txt,text/plain" hidden>
+      </section>
+      <section id="view-panel" role="tabpanel" aria-labelledby="view-tab" hidden>
+        <label class="range-label" for="reading-position">Положение строки <output id="position-output">38%</output></label><input id="reading-position" type="range" min="10" max="80" step="1" value="38" aria-describedby="position-hint">
+        <p class="hint position-hint" id="position-hint">Меньше — ближе к верху, больше — ниже. Текст будет следовать за голосом на выбранной высоте.</p>
+        <label class="range-label" for="font-size">Размер текста <output id="font-output">44 px</output></label><input id="font-size" type="range" min="24" max="80" step="2" value="44">
+        <label class="range-label" for="line-height">Межстрочный интервал <output id="line-output">1.65</output></label><input id="line-height" type="range" min="1.25" max="2.05" step="0.05" value="1.65">
+        <label class="range-label" for="text-width">Ширина строки <output id="width-output">840 px</output></label><input id="text-width" type="range" min="440" max="1100" step="20" value="840">
+        <label class="switch-row" for="mirror-toggle">Зеркальный текст<input id="mirror-toggle" type="checkbox" role="switch"><span class="switch" aria-hidden="true"></span></label>
+        <label class="switch-row" for="light-toggle">Светлая тема<input id="light-toggle" type="checkbox" role="switch"><span class="switch" aria-hidden="true"></span></label>
+        <p class="hint">Нажмите на любое слово в суфлёре, чтобы продолжить чтение с него.</p>
+      </section>
+
+      <section class="mode-section">
+        <h2>Режим прокрутки</h2>
+        <div class="segmented" role="group" aria-label="Режим прокрутки"><button id="voice-mode" aria-pressed="true" class="selected"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11v1a7 7 0 0 0 14 0v-1m-7 8v3"/></svg>По голосу</button><button id="speed-mode" aria-pressed="false">По скорости</button></div>
+        <div id="voice-settings"><label class="field-label" for="language">Язык распознавания</label><select id="language"><option value="ru-RU">Русский</option><option value="en-US">English</option><option value="uk-UA">Українська</option></select><p class="hint" id="voice-notice">Микрофон включится после нажатия «Начать чтение». Распознавание может обрабатывать звук на серверах браузера; потребуется интернет.</p></div>
+        <div id="speed-settings" hidden><label class="range-label" for="reading-speed">Темп чтения <output id="speed-output">130 слов/мин</output></label><input id="reading-speed" type="range" min="40" max="260" step="5" value="130"><p class="hint">Текст движется с постоянной скоростью. Поставьте на паузу, когда нужно.</p></div>
+      </section>
+      <div class="sidebar-bottom"><span class="local-dot"></span>Текст хранится на вашем устройстве</div>
+    </aside>
+
+    <main class="main-panel">
+      <div class="reader-heading"><input id="script-title" aria-label="Название сценария" value="Мой первый дубль" maxlength="80"><span class="heading-dot">·</span><span class="status" id="reading-status" role="status"><i></i><span>Готов к чтению</span></span></div>
+      <div class="message" id="message" role="alert" hidden><span id="message-text"></span><button id="dismiss-message" class="icon-button" aria-label="Закрыть уведомление">×</button></div>
+      <div class="reader-stage" id="reader-stage" tabindex="0" aria-label="Текст телесуфлёра. Нажмите на слово для перехода.">
+        <div class="reading-guide" aria-hidden="true"><svg viewBox="0 0 20 28"><path d="M3 2v24l15-12z"/></svg></div>
+        <div id="reader-scroll" class="reader-scroll"><article id="reading-text" class="reading-text"></article></div>
+        <div id="empty-state" class="empty-state" hidden><svg viewBox="0 0 48 48"><path d="M12 8h24v32H12zm6 9h12m-12 7h12m-12 7h8"/></svg><h2>Здесь будет ваш текст</h2><p>Вставьте сценарий или загрузите файл .txt.</p><button id="empty-edit" class="outline-button">Добавить текст</button></div>
+      </div>
+      <footer class="transport">
+        <div class="transport-main"><time id="elapsed">00:00</time><button class="icon-button reset-button" id="reset-button" title="В начало (R)" aria-label="В начало"><svg viewBox="0 0 24 24"><path d="M6 8a8 8 0 1 1-2 8m2-8h6M6 8V2"/></svg></button><button class="start-button" id="start-button"><svg id="start-icon" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11v1a7 7 0 0 0 14 0v-1m-7 8v3"/></svg><span>Начать чтение</span></button><div class="progress-group"><span id="progress-label">0%</span><progress id="reading-progress" max="100" value="0" aria-label="Прочитано"></progress></div></div>
+        <div class="transport-meta"><span class="keyboard-hint"><kbd>Пробел</kbd> — пауза<span class="desktop-shortcuts"><span class="meta-separator">·</span><kbd>↑ ↓</kbd> — строка</span></span><button class="text-button" id="mirror-button" aria-pressed="false">Зеркало</button><span id="heard-preview" class="heard-preview" aria-label="Распознанная речь"></span></div>
+      </footer>
+    </main>
+  </div>
+
+  <dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-heading"><h2 id="help-title">Ваш голос задаёт темп</h2><button class="icon-button" id="close-help" aria-label="Закрыть справку">×</button></div><ol><li><strong>Подготовьте текст.</strong> Вставьте сценарий слева или загрузите файл .txt в кодировке UTF-8.</li><li><strong>Выберите режим.</strong> «По голосу» следует за произнесёнными словами. «По скорости» двигает текст с выбранным темпом.</li><li><strong>Начните чтение.</strong> В голосовом режиме разрешите микрофон. Делайте паузы — текст подождёт.</li><li><strong>Вернитесь к нужной фразе.</strong> Нажмите на слово, чтобы читать с него. Если пропустили большой фрагмент, также выберите новую точку кликом.</li></ol><div class="help-note">Для голосового режима рекомендуем Chrome. Этот HTML можно открыть напрямую. Если браузер запрещает микрофон из файла, запустите «Запустить локально.command» из комплекта и откройте локальный адрес. Поддержка зависит от браузера и сервиса распознавания. Звук может передаваться сервису браузера; приложение не записывает и не хранит аудио. При недоступном сервисе выберите «По скорости».</div><dl class="shortcuts"><div><dt>Пробел</dt><dd>Начать / пауза</dd></div><div><dt>↑ / ↓</dt><dd>Предыдущая / следующая строка</dd></div><div><dt>R</dt><dd>В начало</dd></div><div><dt>F</dt><dd>Полный экран</dd></div><div><dt>Esc</dt><dd>Закрыть окно / выйти</dd></div></dl><button class="start-button" id="help-done">Всё понятно</button></dialog>
+  <noscript>Для работы телесуфлёра включите JavaScript в браузере.</noscript>
+</body>
+</html>

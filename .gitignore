@@ -1,0 +1,12 @@
+.DS_Store
+.env
+.env.*
+.openai/
+.runtime/
+.venv/
+node_modules/
+__pycache__/
+*.pyc
+dist/
+model-ru/
+model-ru.zip

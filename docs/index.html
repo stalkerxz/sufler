@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101112">
+  <meta name="description" content="Браузерный телесуфлёр. Читайте в своём темпе: текст движется вслед за голосом.">
+  <title>Суфлёр — текст в ритме голоса</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='12' fill='%2318191b'/%3E%3Cpath d='M12 15h24M12 24h18M12 33h24' stroke='%23f4ab85' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <style>
+:root{color-scheme:dark;--bg:#101112;--surface:#18191b;--border:#303134;--text:#f0f0ef;--muted:#96989c;--accent:#f4ab85;--accent-ink:#21150e;--read:#f0f0ef;--done:#74767a;--font-size:44px;--line-height:1.65;--text-width:840px;--sidebar-width:320px;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);overflow:hidden}button,input,select,textarea{font:inherit}button{cursor:pointer}button,input,select,textarea{color:inherit}button{border:0;background:none}button:disabled{cursor:not-allowed;opacity:.45}button,select,input{touch-action:manipulation}button,select,textarea,input{outline:none}button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-visible,.reader-stage:focus-visible{outline:2px solid var(--accent);outline-offset:4px}button:focus-visible{position:relative;z-index:2}button:hover{filter:brightness(1.12)}svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}button{transition:background .15s,border-color .15s,color .15s}button:hover{background-color:color-mix(in srgb,var(--text) 5%,transparent)}[hidden]{display:none!important}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}.app-header{height:76px;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:22px}.brand{font-size:25px;font-weight:600;letter-spacing:-.7px}.tagline{font-size:14px;color:var(--muted);padding-left:21px;border-left:1px solid var(--border)}.header-actions{margin-left:auto;display:flex;align-items:center;gap:25px}.icon-button{width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;border-radius:7px;color:var(--muted);font-size:26px;line-height:1;flex-shrink:0}.menu-button{width:28px;color:var(--text)}.quiet-button,.outline-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:7px;font-size:13px;white-space:nowrap;min-height:38px;padding:8px 12px}.outline-button{border:1px solid var(--border)}.quiet-button{padding:8px 0}.quiet-button svg{color:var(--muted)}.workspace{height:calc(100dvh - 76px);display:flex;position:relative}.sidebar{width:var(--sidebar-width);flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:25px 24px 18px;overflow:auto;scrollbar-width:thin;display:flex;flex-direction:column;overscroll-behavior:contain}.sidebar-heading{display:flex;justify-content:space-between;align-items:start}.sidebar h1{font-size:22px;font-weight:550;line-height:1.3;margin:0 0 7px;letter-spacing:-.4px}.sidebar-heading p{font-size:11px;color:var(--muted);margin:0}.tabs{display:flex;border-bottom:1px solid var(--border);margin:19px 0 15px;gap:10px}.tabs button{font-size:14px;color:var(--muted);padding:10px 14px 12px;position:relative}.tabs .selected{color:var(--accent)}.tabs .selected:after{content:"";position:absolute;height:3px;left:0;right:0;bottom:0;border-radius:3px;background:var(--accent)}#script-editor{display:block;width:100%;height:clamp(165px,28dvh,310px);min-height:100px;max-height:50dvh;resize:vertical;background:transparent;border:1px solid var(--border);border-radius:8px;font-size:15px;line-height:1.65;padding:13px 14px;color:var(--text);scrollbar-width:thin}#script-editor::placeholder{color:var(--muted)}.editor-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;color:var(--muted);font-size:12px}.file-actions{display:flex;gap:4px}.file-actions .outline-button{font-size:12px;padding:7px 9px}.file-actions .icon-button{width:30px}.file-actions svg{width:17px;height:17px}.mode-section{border-top:1px solid var(--border);margin-top:22px;padding-top:22px}.sidebar h2{font-size:15px;font-weight:500;margin:0 0 13px}.segmented{display:flex;border:1px solid var(--border);border-radius:7px;overflow:hidden;width:100%}.segmented button{flex:1;display:flex;gap:6px;align-items:center;justify-content:center;font-size:12px;min-height:40px;padding:8px 4px;white-space:nowrap}.segmented svg{width:16px;height:16px}.segmented .selected{background:var(--accent);color:var(--accent-ink);font-weight:550}.field-label{font-size:14px;display:block;margin:24px 0 11px}select{background:var(--surface);width:100%;border:1px solid var(--border);border-radius:7px;min-height:40px;padding:8px 11px;font-size:14px}.hint{font-size:12px;line-height:1.65;color:var(--muted);margin:16px 0 0}.sidebar-bottom{margin-top:auto;padding-top:25px;font-size:10px;color:var(--muted);display:flex;gap:7px;align-items:center}.local-dot{height:5px;width:5px;flex-shrink:0;border-radius:50%;background:var(--muted)}.range-label{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin:22px 0 13px;gap:5px}.range-label output{font-size:11px;color:var(--muted);white-space:nowrap}input[type=range]{width:100%;accent-color:var(--accent);height:20px;margin:0;cursor:pointer}.switch-row{font-size:13px;display:flex;align-items:center;position:relative;cursor:pointer;gap:10px;margin-top:24px}.switch-row input{width:36px;height:22px;position:absolute;right:0;opacity:0}.switch{display:block;margin-left:auto;height:22px;width:36px;border-radius:14px;background:var(--border);padding:3px;pointer-events:none}.switch:before{content:"";display:block;height:16px;width:16px;border-radius:50%;background:var(--muted);transition:transform .2s}.switch-row input:checked+.switch{background:var(--accent)}.switch-row input:checked+.switch:before{transform:translateX(14px);background:var(--accent-ink)}.switch-row input:focus-visible+.switch{outline:2px solid var(--accent);outline-offset:3px}.main-panel{flex:1;min-width:0;display:flex;flex-direction:column;position:relative}.reader-heading{display:flex;align-items:center;gap:15px;padding:22px 28px 12px;flex-shrink:0;min-height:62px}.reader-heading input{background:none;border:0;border-bottom:1px solid transparent;max-width:250px;width:173px;font-size:14px;text-overflow:ellipsis;padding:4px 0}.reader-heading input:hover{border-color:var(--border)}.heading-dot{color:var(--muted);font-size:12px}.status{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;white-space:nowrap}.status i{width:8px;height:8px;border-radius:50%;background:#81b990;flex-shrink:0}.status[data-state=paused] i{background:var(--accent)}.status[data-state=error] i{background:#e68580}.status[data-state=listening] i{background:#83ca99;box-shadow:0 0 0 4px #83ca9912}.status[data-state=starting] i,.status[data-state=reconnecting] i{background:var(--accent);animation:pulse 1s ease-in-out infinite alternate}@keyframes pulse{to{opacity:.3}}.message{margin:6px 28px 8px;padding:12px 12px 12px 16px;background:color-mix(in srgb,var(--accent) 8%,var(--bg));border:1px solid color-mix(in srgb,var(--accent) 30%,var(--border));border-radius:8px;display:flex;align-items:center;gap:12px;font-size:13px;line-height:1.5;flex-shrink:0}.message .icon-button{margin-left:auto}.reader-stage{position:relative;flex:1;min-height:0;--guide-position:38%;overflow:hidden}.reader-scroll{height:100%;overflow:auto;scrollbar-width:none;overscroll-behavior:contain;position:relative;mask-image:linear-gradient(to bottom,transparent,#000 var(--fade-top,10%),#000 var(--fade-bottom,88%),transparent)}.reader-scroll::-webkit-scrollbar{display:none}.reading-text{width:min(var(--text-width),calc(100% - 112px));margin:0 auto;font-size:var(--font-size);line-height:var(--line-height);font-weight:450;letter-spacing:-.65px;overflow-wrap:anywhere;transform-origin:center;cursor:text;padding-top:var(--reader-top,220px);padding-bottom:var(--reader-bottom,460px);user-select:text}.reading-text p{margin:0 0 .8em}.word{border-radius:4px;cursor:pointer;transition:color .18s;color:var(--read)}.word.past{color:var(--done)}.word.current{color:var(--accent);text-decoration-color:transparent}.word:hover{background:color-mix(in srgb,var(--accent) 8%,transparent)}.word:focus-visible{outline:2px solid var(--accent);outline-offset:3px}.reading-guide{position:absolute;z-index:2;left:27px;top:var(--guide-position);transform:translateY(-50%);pointer-events:none;color:var(--accent)}.reading-guide svg{width:14px;height:22px;fill:currentColor;stroke:none}.mirrored .reading-text{transform:scaleX(-1)}.mirrored .reading-guide{left:auto;right:27px;transform:translateY(-50%) scaleX(-1)}.empty-state{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px;text-align:center}.empty-state>svg{width:52px;height:52px;color:var(--muted);margin-bottom:15px}.empty-state h2{font-size:23px;font-weight:500;margin:10px 0}.empty-state p{font-size:14px;color:var(--muted);margin:0 0 24px}.transport{border-top:1px solid var(--border);padding:23px 35px 17px;flex-shrink:0;min-height:132px;background:var(--bg)}.transport-main{display:flex;align-items:center;justify-content:center;gap:25px}.transport time{font-variant-numeric:tabular-nums;font-size:27px;letter-spacing:-.7px;min-width:76px}.reset-button{border:1px solid var(--border);width:46px;height:46px;background:var(--surface)}.reset-button svg{width:24px;height:24px}.start-button{min-height:54px;background:var(--accent);color:var(--accent-ink);font-size:18px;font-weight:550;display:inline-flex;justify-content:center;align-items:center;gap:14px;padding:13px 28px;border-radius:11px;white-space:nowrap}.start-button:hover{background:var(--accent);filter:brightness(1.06)}.start-button svg{width:25px;height:25px;stroke-width:2}.transport .start-button{min-width:260px}.progress-group{display:flex;align-items:center;gap:16px;flex:1;max-width:250px;font-size:16px;color:var(--muted);font-variant-numeric:tabular-nums}.progress-group>span{min-width:38px;text-align:right}progress{display:block;height:7px;appearance:none;border:0;border-radius:8px;overflow:hidden;width:100%;background:var(--border);accent-color:var(--accent)}progress::-webkit-progress-bar{background:var(--border);border-radius:8px}progress::-webkit-progress-value{background:var(--accent);border-radius:8px}progress::-moz-progress-bar{background:var(--accent)}.transport-meta{display:flex;align-items:center;justify-content:center;gap:20px;font-size:11px;color:var(--muted);margin-top:15px;min-height:20px}.keyboard-hint{white-space:nowrap}kbd{font:inherit}.meta-separator{padding:0 14px}.text-button{padding:0;font-size:11px;color:var(--muted);text-decoration:underline;text-underline-offset:4px}.text-button[aria-pressed=true]{color:var(--accent)}.heard-preview{max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px;font-style:italic}.heard-preview:empty{display:none}dialog{background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:14px;padding:26px 30px;max-width:570px;width:calc(100% - 32px);max-height:calc(100dvh - 40px);overflow:auto;box-shadow:0 25px 90px #0007}dialog::backdrop{background:#0009;backdrop-filter:blur(5px)}.dialog-heading{display:flex;justify-content:space-between;gap:12px;align-items:center}.dialog-heading h2{font-size:22px;font-weight:550;margin:0}dialog ol{padding-left:22px;font-size:14px;line-height:1.65}dialog li{padding:5px 0 5px 5px}dialog strong{font-weight:550}.help-note{padding:14px 16px;border-left:2px solid var(--accent);font-size:12px;line-height:1.65;background:var(--bg);color:var(--muted)}.shortcuts{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;margin:20px 0}.shortcuts div{display:flex;gap:10px}.shortcuts dt{color:var(--text);white-space:nowrap}.shortcuts dd{margin:0;color:var(--muted)}dialog>.start-button{width:100%;font-size:14px;min-height:44px}.mobile-only,.drawer-backdrop{display:none}.sidebar-hidden .sidebar{display:none}.sidebar-hidden .main-panel{width:100%}.light-theme{color-scheme:light;--bg:#fafafa;--surface:#f1f1f2;--border:#d8d9dc;--text:#202124;--read:#202124;--muted:#696c72;--done:#9a9da3;--accent:#9a4d2c;--accent-ink:#fff}.light-theme .start-button,.light-theme .segmented .selected{background:#f4ab85;color:#21150e}.light-theme .switch-row input:checked+.switch{background:#f4ab85}.light-theme .switch-row input:checked+.switch:before{background:#21150e}
+@media(min-width:1500px){:root{--sidebar-width:350px}.sidebar{padding:26px 28px}.reading-text{width:min(var(--text-width),calc(100% - 150px))}.reading-guide{left:46px}.mirrored .reading-guide{right:46px}.transport{padding-top:25px;padding-bottom:22px;min-height:145px}.transport-main{gap:30px}.transport .start-button{min-width:300px;min-height:60px;font-size:20px}.transport time{font-size:30px}.reader-heading{padding:23px 30px 12px}}
+@media(max-width:1150px){:root{--sidebar-width:286px}.sidebar{padding:23px 18px 16px}.app-header{padding:0 22px;gap:18px}.header-actions{gap:18px}.tagline{font-size:12px}.transport{padding:20px 24px 15px}.transport-main{gap:16px}.transport .start-button{min-width:220px;padding:13px 20px;font-size:16px}.progress-group{max-width:170px;gap:8px}.transport time{font-size:24px;min-width:66px}.reading-text{width:calc(100% - 92px);font-size:var(--font-size);letter-spacing:-.4px}.reading-guide{left:19px}.mirrored .reading-guide{right:19px}.reader-heading{padding-left:22px;gap:10px}.reader-heading input{max-width:160px}.status{font-size:11px}.file-actions .outline-button{padding:7px 8px;font-size:11px}}
+@media(max-width:850px){.tagline{display:none}.workspace{height:calc(100dvh - 64px)}.app-header{height:64px;padding:0 20px;gap:15px}.brand{font-size:23px}.header-actions{gap:15px}.sidebar{position:absolute;inset:0 auto 0 0;z-index:20;width:320px;max-width:calc(100vw - 42px);box-shadow:10px 0 50px #0004;padding:23px 24px;display:none}.sidebar-hidden .sidebar{display:none}.drawer-open .sidebar{display:flex}.mobile-only{display:inline-flex}.drawer-backdrop{position:absolute;inset:0;z-index:19;background:#0008;backdrop-filter:blur(3px)}.drawer-open .drawer-backdrop{display:block}.sidebar #script-editor{height:32dvh}.main-panel{width:100%}.reader-heading{padding:18px 25px 8px;min-height:58px}.reading-text{width:calc(100% - 112px);font-size:var(--font-size)}.reading-guide{left:27px}.mirrored .reading-guide{right:27px}.transport .start-button{min-width:240px}.progress-group{max-width:180px}.transport-main{gap:20px}.transport{padding-bottom:calc(15px + env(safe-area-inset-bottom));min-height:130px}.heard-preview{max-width:150px}}
+@media(max-width:560px){.app-header{padding:0 16px;gap:13px}.brand{font-size:21px}.header-actions{gap:10px}.quiet-button{width:36px;min-height:36px;padding:8px}.quiet-button span{display:none}.outline-button#fullscreen-button{width:36px;padding:7px;border:none}.outline-button#fullscreen-button span{display:none}.reader-heading{padding:15px 18px 8px;gap:9px;min-height:56px}.reader-heading input{font-size:12px;max-width:145px;width:145px}.status{font-size:10px;gap:6px}.status i{width:6px;height:6px}.heading-dot{display:none}.reading-text{width:calc(100% - 68px);font-size:clamp(24px,calc(var(--font-size)*.76),60px);letter-spacing:-.4px}.reading-guide{left:12px}.reading-guide svg{width:11px;height:17px}.mirrored .reading-guide{right:12px}.transport{padding:17px 17px calc(13px + env(safe-area-inset-bottom));min-height:136px}.transport-main{display:grid;grid-template-columns:56px 34px 1fr;gap:10px}.transport time{font-size:21px;min-width:0}.reset-button{width:34px;height:40px}.reset-button svg{width:20px;height:20px}.transport .start-button{min-width:0;width:100%;font-size:14px;min-height:48px;padding:12px 11px;gap:9px;border-radius:9px}.transport .start-button svg{width:21px;height:21px}.progress-group{grid-column:1/-1;max-width:none;width:100%;gap:10px;font-size:10px;flex-direction:row-reverse}.progress-group>span{min-width:28px}.progress-group progress{height:4px}.transport-meta{margin-top:8px;gap:15px;font-size:10px}.text-button{font-size:10px}.keyboard-hint .meta-separator,.keyboard-hint .meta-separator+kbd{display:none}.keyboard-hint{font-size:0}.keyboard-hint kbd:first-child{font-size:10px}.keyboard-hint:after{content:" — пауза";font-size:10px}.heard-preview{max-width:120px;font-size:10px}.message{margin:4px 16px;font-size:12px;padding:9px 10px}.shortcuts{grid-template-columns:1fr}dialog{padding:22px}.dialog-heading h2{font-size:19px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+/* Keep the marker aligned with the reading column at every viewport. */
+.reading-guide{left:var(--guide-left,27px)}.mirrored .reading-guide{left:auto;right:var(--guide-left,27px)}
+@media(max-width:560px){.keyboard-hint{font-size:10px}.keyboard-hint:after{content:none}.desktop-shortcuts{display:none}}
+
+.position-hint{margin-top:7px;font-size:11px}
+
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <button class="icon-button menu-button" id="toggle-sidebar" aria-label="Скрыть настройки" aria-expanded="true" aria-controls="sidebar"><svg viewBox="0 0 24 24"><path d="M3 5h18M3 12h18M3 19h18"/></svg></button>
+    <span class="brand">Суфлёр</span><span class="tagline">Ваш голос задаёт темп</span>
+    <div class="header-actions">
+      <button class="quiet-button" id="help-button" aria-label="Как пользоваться"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 .5c0 1.5-2.5 2-2.5 3.5m0 3h.01"/></svg><span>Как пользоваться</span></button>
+      <button class="outline-button" id="fullscreen-button" aria-label="На весь экран"><svg viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg><span>На весь экран</span></button>
+    </div>
+  </header>
+
+  <div class="workspace">
+    <button id="drawer-backdrop" class="drawer-backdrop" aria-label="Закрыть настройки" hidden></button>
+    <aside class="sidebar" id="sidebar" aria-label="Настройки телесуфлёра">
+      <div class="sidebar-heading"><div><h1>Сценарий</h1><p id="save-status">Сохраняется в этом браузере</p></div><button id="close-sidebar" class="icon-button mobile-only" aria-label="Закрыть настройки">×</button></div>
+      <div class="tabs" role="tablist" aria-label="Настройки сценария"><button id="text-tab" role="tab" aria-selected="true" aria-controls="text-panel" class="selected">Текст</button><button id="view-tab" role="tab" aria-selected="false" aria-controls="view-panel" tabindex="-1">Вид</button></div>
+      <section id="text-panel" role="tabpanel" aria-labelledby="text-tab">
+        <label class="sr-only" for="script-editor">Текст сценария</label>
+        <textarea id="script-editor" spellcheck="false" placeholder="Вставьте текст, который хотите прочитать…" maxlength="100000"></textarea>
+        <div class="editor-footer"><span id="word-count">0 слов</span><div class="file-actions"><button class="icon-button" id="export-button" aria-label="Скачать текст" title="Скачать текст"><svg viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 16v5h16v-5"/></svg></button><button class="outline-button" id="import-button"><svg viewBox="0 0 24 24"><path d="M14 3H5v18h14V8zm0 0v5h5"/></svg>Загрузить .txt</button></div></div>
+        <input type="file" id="file-input" accept=".txt,text/plain" hidden>
+      </section>
+      <section id="view-panel" role="tabpanel" aria-labelledby="view-tab" hidden>
+        <label class="range-label" for="reading-position">Положение строки <output id="position-output">38%</output></label><input id="reading-position" type="range" min="10" max="80" step="1" value="38" aria-describedby="position-hint">
+        <p class="hint position-hint" id="position-hint">Меньше — ближе к верху, больше — ниже. Текст будет следовать за голосом на выбранной высоте.</p>
+        <label class="range-label" for="font-size">Размер текста <output id="font-output">44 px</output></label><input id="font-size" type="range" min="24" max="80" step="2" value="44">
+        <label class="range-label" for="line-height">Межстрочный интервал <output id="line-output">1.65</output></label><input id="line-height" type="range" min="1.25" max="2.05" step="0.05" value="1.65">
+        <label class="range-label" for="text-width">Ширина строки <output id="width-output">840 px</output></label><input id="text-width" type="range" min="440" max="1100" step="20" value="840">
+        <label class="switch-row" for="mirror-toggle">Зеркальный текст<input id="mirror-toggle" type="checkbox" role="switch"><span class="switch" aria-hidden="true"></span></label>
+        <label class="switch-row" for="light-toggle">Светлая тема<input id="light-toggle" type="checkbox" role="switch"><span class="switch" aria-hidden="true"></span></label>
+        <p class="hint">Нажмите на любое слово в суфлёре, чтобы продолжить чтение с него.</p>
+      </section>
+
+      <section class="mode-section">
+        <h2>Режим прокрутки</h2>
+        <div class="segmented" role="group" aria-label="Режим прокрутки"><button id="voice-mode" aria-pressed="true" class="selected"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11v1a7 7 0 0 0 14 0v-1m-7 8v3"/></svg>По голосу</button><button id="speed-mode" aria-pressed="false">По скорости</button></div>
+        <div id="voice-settings"><label class="field-label" for="language">Язык распознавания</label><select id="language"><option value="ru-RU">Русский</option><option value="en-US">English</option><option value="uk-UA">Українська</option></select><p class="hint" id="voice-notice">Микрофон включится после нажатия «Начать чтение». Распознавание может обрабатывать звук на серверах браузера; потребуется интернет.</p></div>
+        <div id="speed-settings" hidden><label class="range-label" for="reading-speed">Темп чтения <output id="speed-output">130 слов/мин</output></label><input id="reading-speed" type="range" min="40" max="260" step="5" value="130"><p class="hint">Текст движется с постоянной скоростью. Поставьте на паузу, когда нужно.</p></div>
+      </section>
+      <div class="sidebar-bottom"><span class="local-dot"></span>Текст хранится на вашем устройстве</div>
+    </aside>
+
+    <main class="main-panel">
+      <div class="reader-heading"><input id="script-title" aria-label="Название сценария" value="Мой первый дубль" maxlength="80"><span class="heading-dot">·</span><span class="status" id="reading-status" role="status"><i></i><span>Готов к чтению</span></span></div>
+      <div class="message" id="message" role="alert" hidden><span id="message-text"></span><button id="dismiss-message" class="icon-button" aria-label="Закрыть уведомление">×</button></div>
+      <div class="reader-stage" id="reader-stage" tabindex="0" aria-label="Текст телесуфлёра. Нажмите на слово для перехода.">
+        <div class="reading-guide" aria-hidden="true"><svg viewBox="0 0 20 28"><path d="M3 2v24l15-12z"/></svg></div>
+        <div id="reader-scroll" class="reader-scroll"><article id="reading-text" class="reading-text"></article></div>
+        <div id="empty-state" class="empty-state" hidden><svg viewBox="0 0 48 48"><path d="M12 8h24v32H12zm6 9h12m-12 7h12m-12 7h8"/></svg><h2>Здесь будет ваш текст</h2><p>Вставьте сценарий или загрузите файл .txt.</p><button id="empty-edit" class="outline-button">Добавить текст</button></div>
+      </div>
+      <footer class="transport">
+        <div class="transport-main"><time id="elapsed">00:00</time><button class="icon-button reset-button" id="reset-button" title="В начало (R)" aria-label="В начало"><svg viewBox="0 0 24 24"><path d="M6 8a8 8 0 1 1-2 8m2-8h6M6 8V2"/></svg></button><button class="start-button" id="start-button"><svg id="start-icon" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11v1a7 7 0 0 0 14 0v-1m-7 8v3"/></svg><span>Начать чтение</span></button><div class="progress-group"><span id="progress-label">0%</span><progress id="reading-progress" max="100" value="0" aria-label="Прочитано"></progress></div></div>
+        <div class="transport-meta"><span class="keyboard-hint"><kbd>Пробел</kbd> — пауза<span class="desktop-shortcuts"><span class="meta-separator">·</span><kbd>↑ ↓</kbd> — строка</span></span><button class="text-button" id="mirror-button" aria-pressed="false">Зеркало</button><span id="heard-preview" class="heard-preview" aria-label="Распознанная речь"></span></div>
+      </footer>
+    </main>
+  </div>
+
+  <dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-heading"><h2 id="help-title">Ваш голос задаёт темп</h2><button class="icon-button" id="close-help" aria-label="Закрыть справку">×</button></div><ol><li><strong>Подготовьте текст.</strong> Вставьте сценарий слева или загрузите файл .txt в кодировке UTF-8.</li><li><strong>Выберите режим.</strong> «По голосу» следует за произнесёнными словами. «По скорости» двигает текст с выбранным темпом.</li><li><strong>Начните чтение.</strong> В голосовом режиме разрешите микрофон. Делайте паузы — текст подождёт.</li><li><strong>Вернитесь к нужной фразе.</strong> Нажмите на слово, чтобы читать с него. Если пропустили большой фрагмент, также выберите новую точку кликом.</li></ol><div class="help-note">Для голосового режима рекомендуем Chrome. Этот HTML можно открыть напрямую. Если браузер запрещает микрофон из файла, запустите «Запустить локально.command» из комплекта и откройте локальный адрес. Поддержка зависит от браузера и сервиса распознавания. Звук может передаваться сервису браузера; приложение не записывает и не хранит аудио. При недоступном сервисе выберите «По скорости».</div><dl class="shortcuts"><div><dt>Пробел</dt><dd>Начать / пауза</dd></div><div><dt>↑ / ↓</dt><dd>Предыдущая / следующая строка</dd></div><div><dt>R</dt><dd>В начало</dd></div><div><dt>F</dt><dd>Полный экран</dd></div><div><dt>Esc</dt><dd>Закрыть окно / выйти</dd></div></dl><button class="start-button" id="help-done">Всё понятно</button></dialog>
+  <noscript>Для работы телесуфлёра включите JavaScript в браузере.</noscript>
+<script>
+(() => {
+'use strict';
+/** Text matching is independent of the recognition service and UI. */
+function normalizeWord(word) {
+  return word.toLowerCase().normalize('NFKD').replace(/\p{M}/gu, '')
+    .replace(/ё/g, 'е').replace(/[^\p{L}\p{N}]/gu, '');
+}
+
+function speechWords(text) {
+  return (text.match(/[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*/gu) || [])
+    .map(normalizeWord).filter(Boolean);
+}
+
+function parseScript(text) {
+  let index = 0;
+  const words = [];
+  const paragraphs = text.split(/\n+/).filter(p => p.trim()).map(paragraph => {
+    const parts = (paragraph.match(/[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*|[^\p{L}\p{N}]+/gu) || []).map(text => {
+      const normalized = normalizeWord(text);
+      if (!normalized) return { text };
+      const part = { text, normalized, index: index++ };
+      words.push(normalized);
+      return part;
+    });
+    return parts;
+  });
+  return { words, paragraphs };
+}
+
+function similarity(a, b) {
+  if (a === b) return 4;
+  if (Math.min(a.length, b.length) < 5 || Math.abs(a.length - b.length) > 1) return -3;
+  // A single recognition typo is allowed in a longer word.
+  let i = 0, j = 0, differences = 0;
+  while (i < a.length && j < b.length) {
+    if (a[i] === b[j]) { i++; j++; continue; }
+    if (++differences > 1) return -3;
+    if (a.length >= b.length) i++;
+    if (b.length >= a.length) j++;
+  }
+  differences += (a.length - i) + (b.length - j);
+  return differences <= 1 ? 2.5 : -3;
+}
+
+/**
+ * Semi-global sequence alignment: tolerate filler and small skipped phrases,
+ * require evidence for jumps, prefer nearby repetitions, never move backwards.
+ * cursor is the next unread word. The transcript is a single recognition result.
+ */
+function followSpeech(script, transcript, cursor, anchor = cursor) {
+  const allHeard = speechWords(transcript);
+  const heard = allHeard.slice(-28);
+  if (!heard.length || cursor >= script.length) return cursor;
+  // Once the transcript prefix is discarded, measure proximity within the
+  // current window. An ever-growing distance from the original anchor would
+  // eventually outweigh even a perfect match in a long uninterrupted result.
+  const proximityAnchor = allHeard.length > 28 ? Math.max(anchor, cursor - heard.length) : anchor;
+  const start = Math.max(0, allHeard.length > 28 ? cursor - 32 : anchor - 8);
+  const segment = script.slice(start, Math.min(script.length, cursor + 85));
+  const n = segment.length, m = heard.length;
+  const score = Array.from({ length: m + 1 }, () => new Float64Array(n + 1));
+  const trace = Array.from({ length: m + 1 }, () => new Uint8Array(n + 1));
+  for (let i = 1; i <= m; i++) score[i][0] = -2.5 * i;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      const diagonal = score[i - 1][j - 1] + similarity(heard[i - 1], segment[j - 1]);
+      const filler = score[i - 1][j] - 2.5;
+      const skipped = score[i][j - 1] - 2.6;
+      score[i][j] = Math.max(diagonal, filler, skipped);
+      trace[i][j] = score[i][j] === diagonal ? 1 : score[i][j] === filler ? 2 : 3;
+    }
+  }
+  let bestValue = -Infinity, bestCursor = cursor;
+  for (let end = 1; end <= n; end++) {
+    let i = m, j = end, exact = 0, matches = 0, lastMatch = -1, lastHeard = -1;
+    while (i > 0 && j > 0) {
+      if (trace[i][j] === 1) {
+        if (similarity(heard[i - 1], segment[j - 1]) > 0) {
+          matches++;
+          if (heard[i - 1] === segment[j - 1]) exact++;
+          if (lastMatch < 0) { lastMatch = start + j - 1; lastHeard = i - 1; }
+        }
+        i--; j--;
+      } else if (trace[i][j] === 2) i--;
+      else j--;
+    }
+    const next = lastMatch + 1;
+    if (next <= anchor || lastHeard < m - 2) continue;
+    const jump = next - proximityAnchor;
+    if (m === 1 && (exact !== 1 || jump > 3)) continue;
+    if (m > 1 && (matches < 2 || exact < 1 || matches / m < 0.55)) continue;
+    if (jump > 12 && (exact < 3 || matches / m < 0.7)) continue;
+    const value = score[m][end] - Math.max(0, next - proximityAnchor - 1) * 0.075;
+    if (value > bestValue && value > 0) { bestValue = value; bestCursor = next; }
+  }
+  return Math.max(cursor, bestCursor);
+}
+
+const messages = {
+  'not-allowed': 'Нет доступа к микрофону. Разрешите его в настройках сайта и нажмите «Продолжить».',
+  'service-not-allowed': 'Сервис распознавания недоступен в этом браузере. Попробуйте Chrome или режим «По скорости».',
+  'audio-capture': 'Микрофон не найден или занят другим приложением. Проверьте подключение.',
+  'network': 'Сервис распознавания недоступен. Проверьте интернет или выберите «По скорости».',
+  'language-not-supported': 'Этот язык недоступен в сервисе распознавания. Выберите другой язык.',
+};
+
+/** One controller owns one recognition instance. No microphone at construction. */
+class SpeechFollower {
+  constructor({ Recognition, onTranscript, onState, onError, schedule = (fn, delay) => setTimeout(fn, delay), cancel = id => clearTimeout(id) }) {
+    Object.assign(this, { Recognition, onTranscript, onState, onError, schedule, cancel });
+    this.active = false;
+    this.generation = 0;
+    this.restarts = 0;
+    this.connectionSerial = 0;
+  }
+
+  start(lang) {
+    this.stop();
+    if (!this.Recognition) { this.onError('Голосовой режим недоступен. Откройте приложение в Chrome или выберите «По скорости».'); return; }
+    this.active = true;
+    this.lang = lang;
+    this.restarts = 0;
+    this.connect(this.generation);
+  }
+
+  connect(generation) {
+    if (!this.active || generation !== this.generation) return;
+    let recognition;
+    try {
+      recognition = new this.Recognition();
+      recognition.lang = this.lang;
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.maxAlternatives = 1;
+    } catch {
+      this.stop();
+      this.onError('Браузер не смог создать сервис распознавания. Попробуйте Chrome или режим «По скорости».');
+      return;
+    }
+    const connectionId = ++this.connectionSerial;
+    this.recognition = recognition;
+    const current = () => this.active && generation === this.generation && this.recognition === recognition;
+    const finalized = new Set();
+    recognition.onstart = () => { if (current()) { this.cancel(this.connectionTimer); this.connectionTimer = undefined; this.onState('listening'); } };
+    recognition.onresult = event => {
+      if (!current()) return;
+      this.restarts = 0;
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        if (finalized.has(i)) continue;
+        const result = event.results[i];
+        this.onTranscript(result[0].transcript, { id: `${generation}:${connectionId}:${i}`, isFinal: result.isFinal });
+        if (result.isFinal) finalized.add(i);
+        if (!current()) break;
+      }
+    };
+    recognition.onerror = event => {
+      if (!current() || event.error === 'aborted' || event.error === 'no-speech') return;
+      const message = messages[event.error] || 'Не удалось распознать речь. Попробуйте ещё раз или выберите «По скорости».';
+      this.stop();
+      this.onError(message, { code: event.error });
+    };
+    recognition.onend = () => {
+      if (!current()) return;
+      this.cancel(this.connectionTimer); this.connectionTimer = undefined;
+      if (++this.restarts > 5) {
+        this.stop();
+        this.onError('Браузер завершает распознавание без результата. Проверьте микрофон и интернет, затем продолжите.');
+        return;
+      }
+      this.onState('reconnecting');
+      this.timer = this.schedule(() => this.connect(generation), Math.min(1600, 300 * this.restarts));
+    };
+    this.onState('starting');
+    if (!current()) return;
+    this.connectionTimer = this.schedule(() => {
+      if (!current()) return;
+      this.stop();
+      this.onError('Распознавание не запустилось. Проверьте разрешение микрофона. Если открыт HTML-файл, попробуйте запуск через «Запустить локально.command» или выберите «По скорости».');
+    }, 12000);
+    try { recognition.start(); }
+    catch { this.stop(); this.onError('Не удалось включить микрофон. Проверьте разрешения браузера.'); }
+  }
+
+  stop() {
+    this.active = false;
+    this.generation++;
+    this.cancel(this.timer);
+    this.cancel(this.connectionTimer);
+    this.timer = undefined;
+    this.connectionTimer = undefined;
+    const recognition = this.recognition;
+    this.recognition = null;
+    if (recognition) {
+      recognition.onresult = recognition.onstart = recognition.onerror = recognition.onend = null;
+      try { recognition.abort(); } catch { /* already stopped */ }
+    }
+  }
+}
+
+/** PCM conversion for a mono 16 kHz local recognizer. No audio is saved. */
+function encodePCM16(samples, inputRate, targetRate = 16000) {
+  const ratio = inputRate / targetRate;
+  const length = Math.floor(samples.length / ratio);
+  const buffer = new ArrayBuffer(length * 2), view = new DataView(buffer);
+  for (let i = 0; i < length; i++) {
+    const start = Math.floor(i * ratio), end = Math.min(samples.length, Math.max(start + 1, Math.floor((i + 1) * ratio)));
+    let value = 0;
+    for (let j = start; j < end; j++) value += samples[j];
+    value = Math.max(-1, Math.min(1, value / (end - start)));
+    view.setInt16(i * 2, value < 0 ? value * 32768 : value * 32767, true);
+  }
+  return buffer;
+}
+
+class LocalSpeechFollower {
+  constructor({ onTranscript, onState, onError, fetchImpl = globalThis.fetch?.bind(globalThis), mediaDevices = globalThis.navigator?.mediaDevices, AudioContext = globalThis.AudioContext || globalThis.webkitAudioContext, WorkletNode = globalThis.AudioWorkletNode }) {
+    Object.assign(this, { onTranscript, onState, onError, fetchImpl, mediaDevices, AudioContext, WorkletNode });
+    this.generation = 0; this.active = false; this.queue = [];
+  }
+
+  async request(route, body, contentType = 'application/json') {
+    const response = await this.fetchImpl(route, { method: 'POST', headers: { 'Content-Type': contentType, 'X-Sufler-Token': this.token }, body, signal: this.aborter.signal });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Локальный движок недоступен. Перезапустите «Запустить локально.command».');
+    return result;
+  }
+
+  async start(lang, capability) {
+    this.stop();
+    if (!this.mediaDevices?.getUserMedia || !this.AudioContext) {
+      this.onError('Этот браузер не даёт доступ к аудио. Откройте локальный адрес в Chrome.', { code: 'audio-capture' }); return;
+    }
+    if (lang !== 'ru-RU' || !capability?.ready) {
+      this.onError('Локальное распознавание сейчас доступно для русского языка. Запустите локальный комплект.', { code: 'local-engine' }); return;
+    }
+    this.active = true; const generation = this.generation;
+    this.token = capability.token; this.aborter = new AbortController();
+    const current = () => this.active && generation === this.generation;
+    this.onState('starting');
+    try {
+      const session = await this.request('/api/speech/start', JSON.stringify({ lang }));
+      if (!current()) return;
+      this.session = session.session;
+      const stream = await this.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true }, video: false });
+      if (!current()) { stream.getTracks().forEach(track => track.stop()); return; }
+      this.stream = stream;
+      const context = new this.AudioContext({ sampleRate: 16000 }); this.context = context;
+      await context.resume(); if (!current()) return;
+      const source = context.createMediaStreamSource(stream); this.source = source;
+      const push = samples => {
+        if (!current()) return;
+        if (this.queue.length >= 20) { this.fail('Локальное распознавание не успевает обрабатывать звук. Поставлено на паузу; попробуйте закрыть тяжёлые приложения.', generation); return; }
+        this.queue.push(encodePCM16(samples, context.sampleRate)); this.drain(generation);
+      };
+      if (context.audioWorklet && this.WorkletNode) {
+        const code = `class SuflerCapture extends AudioWorkletProcessor {
+          constructor(){ super(); this.parts=[]; this.size=0; }
+          process(inputs){ const data=inputs[0]?.[0]; if(data){ this.parts.push(new Float32Array(data)); this.size+=data.length;
+            if(this.size>=4096){ const frame=new Float32Array(this.size); let offset=0; for(const part of this.parts){ frame.set(part,offset); offset+=part.length; }
+              this.port.postMessage(frame.buffer,[frame.buffer]); this.parts=[]; this.size=0; } } return true; }
+        } registerProcessor('sufler-capture',SuflerCapture);`;
+        const url = URL.createObjectURL(new Blob([code], { type: 'text/javascript' }));
+        try { await context.audioWorklet.addModule(url); } finally { URL.revokeObjectURL(url); }
+        if (!current()) return;
+        const processor = new this.WorkletNode(context, 'sufler-capture'); this.processor = processor;
+        processor.port.onmessage = event => push(new Float32Array(event.data));
+      } else {
+        const processor = context.createScriptProcessor(4096, 1, 1); this.processor = processor;
+        processor.onaudioprocess = event => { event.outputBuffer?.getChannelData(0).fill(0); push(new Float32Array(event.inputBuffer.getChannelData(0))); };
+      }
+      source.connect(this.processor); this.processor.connect(context.destination);
+      this.onState('listening-local');
+    } catch (error) {
+      if (!current()) return;
+      const permission = error.name === 'NotAllowedError' || error.name === 'SecurityError';
+      const capture = error.name === 'NotFoundError' || error.name === 'NotReadableError';
+      this.stop();
+      this.onError(permission ? 'Нет разрешения на микрофон. Разрешите доступ в браузере и настройках микрофона macOS, затем продолжите.' : capture ? 'Микрофон не найден или занят другим приложением.' : error.message || 'Локальное распознавание недоступно.', { code: permission ? 'not-allowed' : capture ? 'audio-capture' : 'local-engine' });
+    }
+  }
+
+  async drain(generation) {
+    if (this.draining) return;
+    this.draining = true;
+    try {
+      while (this.active && generation === this.generation && this.queue.length) {
+        const result = await this.request(`/api/speech/audio?session=${encodeURIComponent(this.session)}`, this.queue.shift(), 'application/octet-stream');
+        if (!this.active || generation !== this.generation) return;
+        if (result.text) this.onTranscript(result.text, { id: `local:${generation}:${this.session}:${result.utterance}`, isFinal: result.isFinal });
+      }
+    } catch (error) { this.fail(error.message || 'Связь с локальным движком потеряна. Перезапустите локальный комплект.', generation); }
+    finally { if (generation === this.generation) this.draining = false; }
+  }
+
+  fail(message, generation) {
+    if (!this.active || generation !== this.generation) return;
+    this.stop(); this.onError(message, { code: 'local-engine' });
+  }
+
+  stop() {
+    this.active = false; this.generation++; this.aborter?.abort(); this.queue = []; this.draining = false;
+    if (this.processor) {
+      this.processor.onaudioprocess = null;
+      if (this.processor.port) this.processor.port.onmessage = null;
+      try { this.processor.disconnect(); } catch {}
+    }
+    try { this.source?.disconnect(); } catch {}
+    this.stream?.getTracks().forEach(track => track.stop());
+    this.context?.close().catch(() => {});
+    const session = this.session, token = this.token;
+    this.session = null; this.stream = this.source = this.processor = this.context = null;
+    if (session) this.fetchImpl(`/api/speech/stop?session=${encodeURIComponent(session)}`, { method: 'POST', headers: { 'X-Sufler-Token': token }, body: '', keepalive: true }).catch(() => {});
+  }
+}
+
+/** Keep the active line visible near the chosen height, even with large type. */
+function readingLayout({ height, position = 38, fontSize = 44, lineHeight = 1.65 }) {
+  height = Math.max(0, Number.isFinite(height) ? height : 0);
+  position = Math.min(80, Math.max(10, Number.isFinite(position) ? position : 38));
+  const line = Math.max(1, fontSize * lineHeight);
+  const edge = Math.min(height / 2, line / 2 + 4);
+  const guideY = Math.max(edge, Math.min(height - edge, height * position / 100));
+  return {
+    guideY,
+    paddingTop: Math.max(0, guideY - line / 2),
+    paddingBottom: Math.max(height - guideY + line, height / 4),
+    fadeTop: Math.max(0, Math.min(height * .1, guideY - line / 2 - 16)),
+    fadeBottom: Math.min(height, Math.max(height * .88, guideY + line / 2 + 16)),
+  };
+}
+
+
+const $ = id => document.getElementById(id);
+const STORAGE_KEY = 'sufler.settings.v1';
+const SAMPLE = `Добро пожаловать в Суфлёр!
+Говорите в своём темпе. Текст будет двигаться за вашим голосом. Если вы сделаете паузу, суфлёр подождёт вместе с вами.
+
+Вставьте свой сценарий в поле слева. Настройте размер текста, выберите удобную ширину строки и начинайте читать.
+
+Не торопитесь. Смотрите в камеру и говорите так, будто рассказываете историю другу. Здесь не нужно подстраиваться под скорость бегущей строки — она подстроится под вас.
+
+Нужно начать с другой фразы? Просто нажмите на нужное слово. А для настоящего телесуфлёра включите зеркальный текст.
+
+Всё готово. Вдохните, улыбнитесь — и начнём.`;
+const defaults = { text: SAMPLE, title: 'Мой первый дубль', mode: 'voice', lang: 'ru-RU', fontSize: 44, lineHeight: 1.65, textWidth: 840, readingPosition: 38, speed: 130, mirror: false, light: false };
+let storageAvailable = true;
+function loadSettings() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+    if (!saved || typeof saved !== 'object') return { ...defaults };
+    const clamp = (value, min, max, fallback) => typeof value === 'number' && Number.isFinite(value) ? Math.min(max, Math.max(min, value)) : fallback;
+    return {
+      text: typeof saved.text === 'string' ? saved.text.slice(0, 100000) : defaults.text,
+      title: typeof saved.title === 'string' ? saved.title.slice(0, 80) : defaults.title,
+      mode: saved.mode === 'speed' ? 'speed' : 'voice',
+      lang: ['ru-RU', 'en-US', 'uk-UA'].includes(saved.lang) ? saved.lang : 'ru-RU',
+      fontSize: clamp(saved.fontSize, 24, 80, 44), lineHeight: clamp(saved.lineHeight, 1.25, 2.05, 1.65),
+      textWidth: clamp(saved.textWidth, 440, 1100, 840), speed: clamp(saved.speed, 40, 260, 130),
+      readingPosition: clamp(saved.readingPosition, 10, 80, 38),
+      mirror: saved.mirror === true, light: saved.light === true,
+    };
+  } catch { storageAvailable = false; return { ...defaults }; }
+}
+const settings = loadSettings();
+const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let parsed, wordElements = [], cursor = 0, running = false, started = false, elapsedMs = 0;
+let lastFrame = 0, speedAccumulator = 0, speechReady = false, saveTimer, editTimer;
+let desiredScroll = 0, following = true, wakeLock, wakeGeneration = 0;
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const resultAnchors = new Map();
+
+function save() {
+  clearTimeout(saveTimer);
+  $('save-status').textContent = 'Сохранение…';
+  saveTimer = setTimeout(() => {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(settings)); storageAvailable = true; $('save-status').textContent = 'Сохранено в этом браузере'; }
+    catch { storageAvailable = false; $('save-status').textContent = 'Хранилище недоступно — скачайте текст'; }
+  }, 250);
+}
+function showMessage(text) { $('message-text').textContent = text; $('message').hidden = false; }
+function hideMessage() { $('message').hidden = true; }
+function setStatus(state, text) { $('reading-status').dataset.state = state; $('reading-status').lastElementChild.textContent = text; }
+function wordLabel(n) { const a = n % 10, b = n % 100; return `${n} ${a === 1 && b !== 11 ? 'слово' : a >= 2 && a <= 4 && (b < 12 || b > 14) ? 'слова' : 'слов'}`; }
+
+function renderScript() {
+  parsed = parseScript(settings.text);
+  const fragment = document.createDocumentFragment();
+  wordElements = [];
+  for (const paragraph of parsed.paragraphs) {
+    const p = document.createElement('p');
+    for (const part of paragraph) {
+      if (part.index === undefined) p.append(document.createTextNode(part.text));
+      else {
+        const span = document.createElement('span');
+        span.className = 'word'; span.dataset.index = part.index; span.textContent = part.text;
+        wordElements.push(span); p.append(span);
+      }
+    }
+    fragment.append(p);
+  }
+  $('reading-text').replaceChildren(fragment);
+  $('word-count').textContent = wordLabel(parsed.words.length);
+  $('empty-state').hidden = !!parsed.words.length;
+  document.querySelector('.reading-guide').hidden = !parsed.words.length;
+  reset();
+}
+
+function updateCursor(next, instant = false) {
+  const previous = cursor;
+  cursor = Math.max(0, Math.min(parsed.words.length, next));
+  for (let i = Math.max(0, Math.min(previous, cursor) - 1); i <= Math.min(wordElements.length - 1, Math.max(previous, cursor)); i++) {
+    wordElements[i].classList.toggle('past', i < cursor);
+    wordElements[i].classList.toggle('current', i === cursor);
+    if (i === cursor) wordElements[i].setAttribute('aria-current', 'true');
+    else wordElements[i].removeAttribute('aria-current');
+  }
+  const percent = parsed.words.length ? Math.round(cursor / parsed.words.length * 100) : 0;
+  $('reading-progress').value = percent;
+  $('progress-label').textContent = `${percent}%`;
+  $('start-button').disabled = !parsed.words.length;
+  alignWord(instant);
+  if (running && cursor === parsed.words.length) complete();
+}
+
+function alignWord(instant = false) {
+  const word = wordElements[Math.min(cursor, wordElements.length - 1)];
+  if (!word || !following) return;
+  const box = word.getBoundingClientRect();
+  const viewport = $('reader-scroll').getBoundingClientRect();
+  desiredScroll = $('reader-scroll').scrollTop + box.top - viewport.top + box.height / 2 - getReaderLayout().guideY;
+  desiredScroll = Math.max(0, Math.min(desiredScroll, $('reader-scroll').scrollHeight - $('reader-scroll').clientHeight));
+  if (instant || reducedMotion) $('reader-scroll').scrollTop = desiredScroll;
+}
+function getReaderLayout() {
+  return readingLayout({ height: $('reader-stage').clientHeight, position: settings.readingPosition,
+    fontSize: parseFloat(getComputedStyle($('reading-text')).fontSize) || settings.fontSize, lineHeight: settings.lineHeight });
+}
+function layoutReader() {
+  const stage = $('reader-stage'), layout = getReaderLayout();
+  // The first word sits on the same reading line as every subsequent word.
+  $('reading-text').style.setProperty('--reader-top', `${layout.paddingTop}px`);
+  $('reading-text').style.setProperty('--reader-bottom', `${layout.paddingBottom}px`);
+  stage.style.setProperty('--guide-position', `${layout.guideY}px`);
+  stage.style.setProperty('--fade-top', `${layout.fadeTop}px`);
+  stage.style.setProperty('--fade-bottom', `${layout.fadeBottom}px`);
+  const inset = $('reading-text').getBoundingClientRect().left - stage.getBoundingClientRect().left;
+  stage.style.setProperty('--guide-left', `${Math.max(12, inset - 36)}px`);
+  alignWord(true);
+}
+
+let localCapability = null;
+const speechCallbacks = {
+  onTranscript(text, result) {
+    $('heard-preview').textContent = `«${text.trim()}»`;
+    if (!resultAnchors.has(result.id)) resultAnchors.set(result.id, cursor);
+    const next = followSpeech(parsed.words, text, cursor, resultAnchors.get(result.id));
+    if (resultAnchors.size > 100) resultAnchors.delete(resultAnchors.keys().next().value);
+    if (next > cursor) { following = true; updateCursor(next); }
+  },
+  onState(state) {
+    speechReady = state === 'listening' || state === 'listening-local';
+    const labels = { starting: 'Включаем микрофон…', listening: 'Слушаю ваш голос', 'listening-local': 'Слушаю · на устройстве', reconnecting: 'Возобновляем микрофон…' };
+    setStatus(state, labels[state]);
+  },
+  onError(message, detail = {}) {
+    pause();
+    const capture = ['not-allowed', 'audio-capture'].includes(detail.code);
+    setStatus('error', capture ? 'Нет доступа к микрофону' : 'Распознавание недоступно');
+    if (detail.code === 'network') message = location.protocol === 'file:'
+      ? 'Браузер не смог подключиться к сервису распознавания. Это не подтверждает поломку микрофона. Для русского языка используйте «Запустить локально.command» из обновлённого комплекта: он включает распознавание на устройстве.'
+      : 'Сервис распознавания браузера недоступен по сети. Откройте обновлённый локальный комплект для распознавания русского на устройстве или выберите «По скорости».';
+    showMessage(message);
+  },
+};
+const browserSpeech = new SpeechFollower({ Recognition, ...speechCallbacks });
+const localSpeech = new LocalSpeechFollower(speechCallbacks);
+let speech = browserSpeech;
+
+async function keepAwake() {
+  const generation = ++wakeGeneration;
+  try { if ('wakeLock' in navigator) { const lock = await navigator.wakeLock.request('screen'); if (!running || generation !== wakeGeneration) await lock.release(); else wakeLock = lock; } } catch { /* optional enhancement */ }
+}
+function releaseWakeLock() { wakeGeneration++; if (wakeLock) { wakeLock.release().catch(() => {}); wakeLock = null; } }
+function updateButton() {
+  const icon = running ? '<path d="M8 5v14M16 5v14"/>' : settings.mode === 'voice' ? '<rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11v1a7 7 0 0 0 14 0v-1m-7 8v3"/>' : '<path d="m8 4 12 8-12 8z"/>';
+  $('start-icon').innerHTML = icon;
+  $('start-button').lastElementChild.textContent = running ? 'Пауза' : cursor >= parsed.words.length && parsed.words.length ? 'Ещё один дубль' : started ? 'Продолжить' : 'Начать чтение';
+  $('start-button').setAttribute('aria-pressed', String(running));
+}
+function start() {
+  // Commit a pending text edit before using the parsed script.
+  if (editTimer) { clearTimeout(editTimer); editTimer = null; renderScript(); }
+  if (!parsed.words.length) { showMessage('Добавьте текст сценария, чтобы начать чтение.'); return; }
+  if (settings.mode === 'voice' && (!(localCapability?.ready && settings.lang === 'ru-RU') && !Recognition || !window.isSecureContext)) {
+    showMessage(!window.isSecureContext ? 'Для микрофона откройте сайт через HTTPS или localhost. Можно также выбрать «По скорости».' : 'В этом браузере нет распознавания речи. Откройте в Chrome или выберите «По скорости».');
+    return;
+  }
+  if (cursor >= parsed.words.length) reset();
+  hideMessage();
+  following = true; alignWord();
+  running = true; started = true; lastFrame = performance.now();
+  if (settings.mode === 'voice') { speechReady = false; resultAnchors.clear(); speech.stop(); speech = localCapability?.ready && settings.lang === 'ru-RU' ? localSpeech : browserSpeech; speech.start(settings.lang, localCapability); }
+  else { speechReady = false; setStatus('listening', 'Чтение по скорости'); }
+  updateButton();
+  if (running) keepAwake();
+  closeDrawer();
+}
+function pause() {
+  running = false; speechReady = false; speech.stop(); releaseWakeLock();
+  if (started) setStatus('paused', 'На паузе');
+  updateButton();
+}
+function complete() { pause(); setStatus('complete', 'Дубль завершён'); $('heard-preview').textContent = 'Отлично. Текст прочитан.'; updateButton(); }
+function reset() {
+  pause(); started = false; elapsedMs = 0; speedAccumulator = 0; following = true;
+  $('elapsed').textContent = '00:00'; $('heard-preview').textContent = '';
+  updateCursor(0, true); setStatus('ready', 'Готов к чтению'); updateButton();
+}
+function toggleReading() { running ? pause() : start(); }
+function animationFrame(now) {
+  const dt = Math.min(100, Math.max(0, now - (lastFrame || now))); lastFrame = now;
+  if (running && (settings.mode === 'speed' || speechReady)) {
+    elapsedMs += dt;
+    const seconds = Math.floor(elapsedMs / 1000);
+    $('elapsed').textContent = `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+    if (settings.mode === 'speed') {
+      speedAccumulator += dt / 60000 * settings.speed;
+      if (speedAccumulator >= 1) { const count = Math.floor(speedAccumulator); speedAccumulator -= count; following = true; updateCursor(cursor + count); }
+    }
+  }
+  if (following) {
+    const scroll = $('reader-scroll');
+    const delta = desiredScroll - scroll.scrollTop;
+    if (Math.abs(delta) > .5) scroll.scrollTop += delta * (reducedMotion ? 1 : Math.min(1, dt / 110));
+  }
+  requestAnimationFrame(animationFrame);
+}
+
+function setMode(mode) {
+  pause(); settings.mode = mode; speedAccumulator = 0;
+  $('voice-mode').classList.toggle('selected', mode === 'voice'); $('voice-mode').setAttribute('aria-pressed', String(mode === 'voice'));
+  $('speed-mode').classList.toggle('selected', mode === 'speed'); $('speed-mode').setAttribute('aria-pressed', String(mode === 'speed'));
+  $('voice-settings').hidden = mode !== 'voice'; $('speed-settings').hidden = mode !== 'speed';
+  updateButton(); save();
+}
+function applyView() {
+  const style = document.documentElement.style;
+  style.setProperty('--font-size', `${settings.fontSize}px`); style.setProperty('--line-height', settings.lineHeight); style.setProperty('--text-width', `${settings.textWidth}px`);
+  document.body.classList.toggle('light-theme', settings.light); $('reader-stage').classList.toggle('mirrored', settings.mirror);
+  $('font-size').value = settings.fontSize; $('font-output').value = `${settings.fontSize} px`;
+  $('line-height').value = settings.lineHeight; $('line-output').value = settings.lineHeight.toFixed(2);
+  $('text-width').value = settings.textWidth; $('width-output').value = `${settings.textWidth} px`;
+  $('reading-position').value = settings.readingPosition; $('position-output').value = `${settings.readingPosition}%`;
+  $('reading-speed').value = settings.speed; $('speed-output').value = `${settings.speed} слов/мин`;
+  $('mirror-toggle').checked = settings.mirror; $('light-toggle').checked = settings.light;
+  $('mirror-button').setAttribute('aria-pressed', String(settings.mirror));
+  requestAnimationFrame(layoutReader);
+}
+function setTab(name) {
+  for (const tab of ['text', 'view']) {
+    const active = tab === name; $(tab + '-tab').setAttribute('aria-selected', String(active));
+    $(tab + '-tab').classList.toggle('selected', active); $(tab + '-tab').tabIndex = active ? 0 : -1; $(tab + '-panel').hidden = !active;
+  }
+}
+function closeDrawer() {
+  document.body.classList.remove('drawer-open'); $('drawer-backdrop').hidden = true;
+  $('toggle-sidebar').setAttribute('aria-expanded', String(innerWidth > 850 && !document.body.classList.contains('sidebar-hidden')));
+  updateSidebarAccessibility();
+}
+function updateSidebarAccessibility() {
+  const mobile = innerWidth <= 850, open = document.body.classList.contains('drawer-open');
+  if (mobile && open) { $('sidebar').setAttribute('role', 'dialog'); $('sidebar').setAttribute('aria-modal', 'true'); }
+  else { $('sidebar').removeAttribute('role'); $('sidebar').removeAttribute('aria-modal'); }
+  $('toggle-sidebar').setAttribute('aria-label', mobile ? (open ? 'Закрыть настройки' : 'Открыть настройки') : document.body.classList.contains('sidebar-hidden') ? 'Показать настройки' : 'Скрыть настройки');
+}
+function toggleSidebar() {
+  if (innerWidth <= 850) {
+    const open = !document.body.classList.contains('drawer-open');
+    document.body.classList.toggle('drawer-open', open); $('drawer-backdrop').hidden = !open;
+    $('toggle-sidebar').setAttribute('aria-expanded', String(open));
+    updateSidebarAccessibility(); if (open) $('close-sidebar').focus();
+  } else {
+    document.body.classList.toggle('sidebar-hidden');
+    $('toggle-sidebar').setAttribute('aria-expanded', String(!document.body.classList.contains('sidebar-hidden')));
+    updateSidebarAccessibility(); requestAnimationFrame(layoutReader);
+  }
+}
+async function toggleFullscreen() {
+  try {
+    if (document.fullscreenElement) await document.exitFullscreen();
+    else if (document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen();
+    else { if (innerWidth <= 850) closeDrawer(); else document.body.classList.add('sidebar-hidden'); showMessage('Полный экран недоступен в этом браузере. Настройки скрыты для чтения.'); }
+  } catch { showMessage('Браузер не разрешил полноэкранный режим. Можно скрыть настройки кнопкой слева вверху.'); }
+}
+function seekLine(direction) {
+  const current = wordElements[Math.min(cursor, wordElements.length - 1)];
+  if (!current) return;
+  const y = current.offsetTop;
+  let next = Math.min(cursor, wordElements.length - 1);
+  if (direction > 0) { while (next < wordElements.length - 1 && wordElements[next].offsetTop <= y + 1) next++; }
+  else { next = Math.max(0, next - 1); while (next > 0 && wordElements[next].offsetTop >= y - 1) next--; const previousY = wordElements[next].offsetTop; while (next > 0 && wordElements[next - 1].offsetTop === previousY) next--; }
+  seek(next);
+}
+function seek(next) {
+  const resume = running; if (resume) pause(); following = true; speedAccumulator = 0;
+  updateCursor(next); if (!running && cursor < parsed.words.length) setStatus(started ? 'paused' : 'ready', started ? 'На паузе' : 'Готов к чтению');
+  $('heard-preview').textContent = ''; updateButton(); if (resume) start();
+}
+
+$('script-editor').value = settings.text; $('script-title').value = settings.title; $('language').value = settings.lang;
+$('script-editor').addEventListener('input', () => {
+  pause(); settings.text = $('script-editor').value; save();
+  clearTimeout(editTimer); editTimer = setTimeout(() => { editTimer = null; renderScript(); layoutReader(); }, 180);
+});
+$('script-title').addEventListener('input', event => { settings.title = event.target.value; save(); });
+$('start-button').addEventListener('click', toggleReading); $('reset-button').addEventListener('click', () => { hideMessage(); reset(); });
+$('voice-mode').addEventListener('click', () => setMode('voice')); $('speed-mode').addEventListener('click', () => setMode('speed'));
+$('language').addEventListener('change', event => { pause(); settings.lang = event.target.value; save(); });
+for (const [id, key] of [['font-size','fontSize'],['line-height','lineHeight'],['text-width','textWidth'],['reading-position','readingPosition'],['reading-speed','speed']]) $(id).addEventListener('input', event => {
+  settings[key] = Number(event.target.value);
+  if (id === 'reading-position') following = true;
+  applyView(); save();
+});
+$('mirror-toggle').addEventListener('change', event => { settings.mirror = event.target.checked; applyView(); save(); });
+$('light-toggle').addEventListener('change', event => { settings.light = event.target.checked; applyView(); save(); });
+$('mirror-button').addEventListener('click', () => { settings.mirror = !settings.mirror; applyView(); save(); });
+for (const name of ['text', 'view']) $(name + '-tab').addEventListener('click', () => setTab(name));
+document.querySelector('.tabs').addEventListener('keydown', event => {
+  if (['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) { event.preventDefault(); const name = event.key === 'Home' ? 'text' : event.key === 'End' ? 'view' : $('text-tab').getAttribute('aria-selected') === 'true' ? 'view' : 'text'; setTab(name); $(name + '-tab').focus(); }
+});
+$('toggle-sidebar').addEventListener('click', toggleSidebar);
+for (const id of ['close-sidebar','drawer-backdrop']) $(id).addEventListener('click', () => { closeDrawer(); $('toggle-sidebar').focus(); });
+$('empty-edit').addEventListener('click', () => { setTab('text'); if (innerWidth <= 850 && !document.body.classList.contains('drawer-open')) toggleSidebar(); else if (document.body.classList.contains('sidebar-hidden')) toggleSidebar(); $('script-editor').focus(); });
+$('dismiss-message').addEventListener('click', hideMessage);
+$('fullscreen-button').addEventListener('click', toggleFullscreen);
+document.addEventListener('fullscreenchange', () => { const label = document.fullscreenElement ? 'Выйти из экрана' : 'На весь экран'; $('fullscreen-button').lastElementChild.textContent = label; $('fullscreen-button').setAttribute('aria-label', label); requestAnimationFrame(layoutReader); });
+function openHelp() { if (running) pause(); $('help-dialog').showModal(); }
+$('help-button').addEventListener('click', openHelp);
+for (const id of ['close-help','help-done']) $(id).addEventListener('click', () => $('help-dialog').close());
+$('help-dialog').addEventListener('click', event => { if (event.target === $('help-dialog')) { const r = event.target.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) event.target.close(); } });
+$('reading-text').addEventListener('click', event => { const word = event.target.closest('.word'); if (word) seek(Number(word.dataset.index)); });
+for (const eventName of ['wheel','touchstart']) $('reader-scroll').addEventListener(eventName, () => { if (running) pause(); following = false; }, { passive: true });
+$('import-button').addEventListener('click', () => $('file-input').click());
+$('file-input').addEventListener('change', async event => {
+  const file = event.target.files[0]; if (!file) return;
+  event.target.value = '';
+  if (file.size > 500000) { showMessage('Файл слишком большой. Максимум — 500 КБ и 100 000 символов.'); return; }
+  if (!/\.txt$/i.test(file.name) && file.type !== 'text/plain') { showMessage('Выберите текстовый файл .txt в кодировке UTF-8.'); return; }
+  try {
+    const text = (await file.text()).replace(/^\uFEFF/, '');
+    if (text.includes('\u0000') || text.includes('\uFFFD')) { showMessage('Не удалось прочитать текст. Сохраните файл в формате .txt с кодировкой UTF-8.'); return; }
+    if (text.length > 100000) { showMessage('Текст слишком длинный. Максимум — 100 000 символов.'); return; }
+    clearTimeout(editTimer); editTimer = null; pause(); settings.text = text; settings.title = file.name.replace(/\.txt$/i, '').slice(0,80);
+    $('script-editor').value = text; $('script-title').value = settings.title; renderScript(); layoutReader(); save(); hideMessage();
+  } catch { showMessage('Не удалось открыть файл. Попробуйте ещё раз.'); }
+});
+$('export-button').addEventListener('click', () => {
+  const url = URL.createObjectURL(new Blob([settings.text], { type: 'text/plain;charset=utf-8' }));
+  const link = document.createElement('a'); link.href = url; link.download = `${(settings.title || 'Сценарий').replace(/[<>:"/\\|?*]/g, '_')}.txt`;
+  link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && document.body.classList.contains('drawer-open')) { closeDrawer(); $('toggle-sidebar').focus(); return; }
+  if (event.key === 'Tab' && innerWidth <= 850 && document.body.classList.contains('drawer-open')) {
+    const items = [...$('sidebar').querySelectorAll('button, textarea, select, input, [tabindex="0"]')].filter(el => !el.disabled && el.tabIndex !== -1 && el.getClientRects().length);
+    if (event.shiftKey && (document.activeElement === items[0] || !$('sidebar').contains(document.activeElement))) { event.preventDefault(); items.at(-1)?.focus(); }
+    else if (!event.shiftKey && (document.activeElement === items.at(-1) || !$('sidebar').contains(document.activeElement))) { event.preventDefault(); items[0]?.focus(); }
+    return;
+  }
+  if (event.repeat || event.ctrlKey || event.metaKey || event.altKey || $('help-dialog').open || document.body.classList.contains('drawer-open')) return;
+  if (event.target.closest('textarea,input,select,button,[contenteditable=true]')) return;
+  if (event.code === 'Space') { event.preventDefault(); toggleReading(); }
+  else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); seekLine(event.key === 'ArrowDown' ? 1 : -1); }
+  else if (event.code === 'KeyR') { event.preventDefault(); reset(); }
+  else if (event.code === 'KeyF') { event.preventDefault(); toggleFullscreen(); }
+});
+document.addEventListener('visibilitychange', () => { if (document.hidden && running) pause(); });
+window.addEventListener('pagehide', () => {
+  pause();
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(settings)); } catch { /* current browser disallows storage */ }
+});
+const resizeObserver = new ResizeObserver(() => { layoutReader(); updateSidebarAccessibility(); $('toggle-sidebar').setAttribute('aria-expanded', String(innerWidth <= 850 ? document.body.classList.contains('drawer-open') : !document.body.classList.contains('sidebar-hidden'))); }); resizeObserver.observe($('reader-stage'));
+
+renderScript(); setMode(settings.mode); applyView(); updateSidebarAccessibility(); closeDrawer();
+if (!Recognition) $('voice-notice').textContent = 'В этом браузере нет распознавания речи. Откройте в Chrome или выберите режим «По скорости». Микрофон не включён.';
+else if (location.protocol === 'file:') $('voice-notice').textContent = 'Локальный файл. Микрофон включится только после старта. Если браузер запретит доступ, откройте «Запустить локально.command» из комплекта. Распознавание может отправлять звук сервису браузера и требует интернет.';
+if (!storageAvailable) $('save-status').textContent = 'Хранилище недоступно — скачайте текст';
+requestAnimationFrame(animationFrame);
+
+if (['127.0.0.1', 'localhost'].includes(location.hostname) && typeof fetch === 'function') {
+  fetch('/api/speech/status', { cache: 'no-store' }).then(response => response.ok ? response.json() : null).then(capability => {
+    if (!capability || capability.engine !== 'vosk') return;
+    localCapability = capability;
+    if (capability.ready) $('voice-notice').textContent = 'Русский распознаётся на этом компьютере. Интернет для чтения не нужен; аудио не отправляется внешним сервисам. Другие языки используют сервис браузера.';
+    else $('voice-notice').textContent = 'Локальный движок не готов. Запустите «Запустить локально.command» из полного комплекта, чтобы подготовить распознавание русского.';
+  }).catch(() => {});
+}
+
+})();
+</script>
+</body>
+</html>
