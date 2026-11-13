@@ -42,9 +42,10 @@ export class LocalSpeechFollower {
       const session = await this.request('/api/speech/start', JSON.stringify({ lang }));
       if (!current()) return;
       this.session = session.session;
-      const stream = await this.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true }, video: false });
+      const stream = await this.mediaDevices.getUserMedia({ audio: { ...(capability.deviceId ? { deviceId: { exact: capability.deviceId } } : {}), channelCount: 1, echoCancellation: true, noiseSuppression: true }, video: false });
       if (!current()) { stream.getTracks().forEach(track => track.stop()); return; }
       this.stream = stream;
+      stream.getAudioTracks?.().forEach(track => track.addEventListener('ended', () => this.fail('Микрофон отключён. Подключите его и продолжите чтение.', generation), { once: true }));
       const context = new this.AudioContext({ sampleRate: 16000 }); this.context = context;
       await context.resume(); if (!current()) return;
       const source = context.createMediaStreamSource(stream); this.source = source;

@@ -5,11 +5,11 @@ import vm from 'node:vm';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = name => readFile(path.join(root, 'src', name), 'utf8');
-const [template, css, alignment, speech, localSpeech, readerLayout, app] = await Promise.all(
-  ['index.html', 'styles.css', 'alignment.js', 'speech.js', 'local-speech.js', 'reader-layout.js', 'app.js'].map(read),
+const [template, css, alignment, speech, localSpeech, readerLayout, library, app] = await Promise.all(
+  ['index.html', 'styles.css', 'alignment.js', 'speech.js', 'local-speech.js', 'reader-layout.js', 'library.js', 'app.js'].map(read),
 );
 const withoutExports = source => source.replace(/^export (?=(?:class|function)\s)/gm, '');
-const runtime = `(() => {\n'use strict';\n${withoutExports(alignment)}\n${withoutExports(speech)}\n${withoutExports(localSpeech)}\n${withoutExports(readerLayout)}\n${app.replace(/^import .*;\r?\n/gm, '')}\n})();`;
+const runtime = `(() => {\n'use strict';\n${withoutExports(alignment)}\n${withoutExports(speech)}\n${withoutExports(localSpeech)}\n${withoutExports(readerLayout)}\n${withoutExports(library)}\n${app.replace(/^import .*;\r?\n/gm, '')}\n})();`;
 new vm.Script(runtime, { filename: 'sufler-bundle.js' });
 const html = template
   .replace('  <link rel="stylesheet" href="./styles.css">', () => `  <style>\n${css}\n  </style>`)

@@ -4,6 +4,7 @@ import argparse
 import secrets
 from urllib.parse import urlsplit, parse_qs
 from local_engine import LocalEngine
+from remote_control import RemoteControl
 import json
 import platform
 import subprocess
@@ -27,8 +28,10 @@ def main():
     app_file = next((p for p in [root / 'Телесуфлёр.html', root / 'index.html'] if p.is_file()), None)
     if app_file is None:
         parser.error('Рядом с запуском должен находиться Телесуфлёр.html или index.html')
-    identity = {'app': 'sufler-local', 'directory': str(root), 'version': 2}
+    identity = {'app': 'sufler-local', 'directory': str(root), 'version': 3}
     engine = LocalEngine(args.model or root / 'model-ru')
+
+    remote = RemoteControl()
 
     def open_browser(url):
         if args.no_open:
@@ -55,7 +58,13 @@ def main():
                     self.send_error(413); return
                 data = self.rfile.read(length)
                 key = parse_qs(route.query).get('session', [''])[0]
-                if route.path == '/api/speech/start':
+                if route.path == '/api/remote/enable':
+                    result = remote.enable()
+                elif route.path == '/api/remote/poll':
+                    result = remote.poll(json.loads(data))
+                elif route.path == '/api/remote/disable':
+                    result = remote.disable(json.loads(data).get('lease', ''))
+                elif route.path == '/api/speech/start':
                     result = engine.start(json.loads(data).get('lang', 'ru-RU'))
                 elif route.path == '/api/speech/audio':
                     result = engine.audio(key, data)
@@ -143,6 +152,7 @@ def main():
     except KeyboardInterrupt:
         pass
     finally:
+        remote.disable()
         server.server_close()
 
 

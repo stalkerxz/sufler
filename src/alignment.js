@@ -13,7 +13,8 @@ export function parseScript(text) {
   let index = 0;
   const words = [];
   const paragraphs = text.split(/\n+/).filter(p => p.trim()).map(paragraph => {
-    const parts = (paragraph.match(/[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*|[^\p{L}\p{N}]+/gu) || []).map(text => {
+    const parts = (paragraph.match(/\[[^\]\n]*\]|[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*|[^\p{L}\p{N}\[]+|\[/gu) || []).map(text => {
+      if (text.startsWith('[') && text.endsWith(']')) return { text, direction: true };
       const normalized = normalizeWord(text);
       if (!normalized) return { text };
       const part = { text, normalized, index: index++ };
@@ -45,7 +46,7 @@ function similarity(a, b) {
  * require evidence for jumps, prefer nearby repetitions, never move backwards.
  * cursor is the next unread word. The transcript is a single recognition result.
  */
-export function followSpeech(script, transcript, cursor, anchor = cursor) {
+function alignSpeech(script, transcript, cursor, anchor = cursor) {
   const allHeard = speechWords(transcript);
   const heard = allHeard.slice(-28);
   if (!heard.length || cursor >= script.length) return cursor;
@@ -92,4 +93,37 @@ export function followSpeech(script, transcript, cursor, anchor = cursor) {
     if (value > bestValue && value > 0) { bestValue = value; bestCursor = next; }
   }
   return Math.max(cursor, bestCursor);
+}
+
+// Expand written numbers and common Russian initialisms before alignment,
+// retaining the mapping to visible words. Partial numbers never consume a word.
+export function spokenNumber(value) {
+  const n = Number(value);
+  if (!/^\d{1,6}$/.test(value) || n > 999999) return [value];
+  if (!n) return ['ноль'];
+  const units = ['','один','два','три','четыре','пять','шесть','семь','восемь','девять'];
+  const teens = ['десять','одиннадцать','двенадцать','тринадцать','четырнадцать','пятнадцать','шестнадцать','семнадцать','восемнадцать','девятнадцать'];
+  const tens = ['','','двадцать','тридцать','сорок','пятьдесят','шестьдесят','семьдесят','восемьдесят','девяносто'];
+  const hundreds = ['','сто','двести','триста','четыреста','пятьсот','шестьсот','семьсот','восемьсот','девятьсот'];
+  const small = (v, female = false) => [hundreds[Math.floor(v / 100)], v % 100 < 20 && v % 100 >= 10 ? teens[v % 100 - 10] : tens[Math.floor(v % 100 / 10)], v % 100 >= 10 && v % 100 < 20 ? '' : female && v % 10 === 1 ? 'одна' : female && v % 10 === 2 ? 'две' : units[v % 10]].filter(Boolean);
+  const k = Math.floor(n / 1000);
+  return [...(k ? [...small(k, true), k % 100 >= 11 && k % 100 <= 14 ? 'тысяч' : k % 10 === 1 ? 'тысяча' : k % 10 >= 2 && k % 10 <= 4 ? 'тысячи' : 'тысяч'] : []), ...small(n % 1000)];
+}
+const abbreviations = { 'сша':'сэ шэ а', 'рф':'эр эф', 'мвд':'эм вэ дэ', 'мгу':'эм гэ у', 'пк':'пэ ка', 'ии':'и и', 'ооо':'о о о', 'кг':'килограмм', 'км':'километр' };
+function expandWord(word) {
+  return (abbreviations[word]?.split(' ') || spokenNumber(word)).map(normalizeWord);
+}
+export function followSpeech(script, transcript, cursor, anchor = cursor) {
+  // Limit expansion to the same local neighborhood as the matcher.
+  const transcriptWords = speechWords(transcript);
+  const base = Math.max(0, transcriptWords.length > 28 ? cursor - 32 : Math.min(anchor, cursor) - 8);
+  const source = script.slice(base, cursor + 85);
+  const expanded = [], ends = [0];
+  for (const word of source) { expanded.push(...expandWord(word)); ends.push(expanded.length); }
+  const localCursor = Math.max(0, cursor - base), localAnchor = Math.max(0, anchor - base);
+  const heard = transcriptWords.flatMap(expandWord).join(' ');
+  const next = alignSpeech(expanded, heard, ends[localCursor] ?? expanded.length, ends[localAnchor] ?? 0);
+  let visible = localCursor;
+  while (visible < source.length && ends[visible + 1] <= next) visible++;
+  return Math.max(cursor, base + visible);
 }

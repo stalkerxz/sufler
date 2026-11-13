@@ -57,3 +57,25 @@ test('a revised interim transcript cannot move the cursor backwards', () => {
   const script = words('Говорите в своём темпе и читайте дальше.');
   assert.equal(followSpeech(script, 'говорите в своём темпе', 6, 0), 6);
 });
+test('stage directions are visible but excluded from speech alignment', () => {
+  const p = parseScript('[улыбнуться] У нас [пауза] 45 человек.');
+  assert.equal(p.paragraphs.flat().filter(p=>p.direction).length, 2);
+  assert.deepEqual(p.words, ['у','нас','45','человек']);
+  assert.equal(followSpeech(p.words, 'у нас сорок пять человек', 0), 4);
+});
+test('partial number does not consume whole written token', () => {
+  const p = words('45 человек и 2026 планов');
+  assert.equal(followSpeech(p,'сорок',0),0);
+  assert.equal(followSpeech(p,'сорок пять',0),1);
+  assert.equal(followSpeech(p,'две тысячи двадцать шесть планов',2),5);
+});
+test('abbreviations match spoken letters and numerical transcript matches written words', () => {
+  assert.equal(followSpeech(words('Наш ПК работает'), 'наш пэ ка работает',0),3);
+  assert.equal(followSpeech(words('У нас сорок пять человек'),'у нас 45 человек',0),5);
+});
+test('silence and repeated corrections retain cursor until speech catches up', () => {
+  const p=words('Сегодня мы читаем длинную историю про путешествие');
+  assert.equal(followSpeech(p,'',4),4);
+  assert.equal(followSpeech(p,'сегодня мы читаем',4),4);
+  assert.equal(followSpeech(p,'длинную историю про путешествие',4),7);
+});
